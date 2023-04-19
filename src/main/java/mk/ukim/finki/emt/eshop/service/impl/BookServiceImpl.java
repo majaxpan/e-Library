@@ -5,7 +5,6 @@ import mk.ukim.finki.emt.eshop.model.Book;
 import mk.ukim.finki.emt.eshop.model.dto.BookDto;
 import mk.ukim.finki.emt.eshop.model.enumerations.Category;
 import mk.ukim.finki.emt.eshop.model.exceptions.AuthorNotFoundException;
-import mk.ukim.finki.emt.eshop.model.exceptions.BookNotAvailableException;
 import mk.ukim.finki.emt.eshop.model.exceptions.BookNotFoundException;
 import mk.ukim.finki.emt.eshop.repository.AuthorRepository;
 import mk.ukim.finki.emt.eshop.repository.BookRepository;
@@ -89,7 +88,7 @@ public class BookServiceImpl implements BookService {
         book.setName(bookDto.getName());
         book.setCategory(bookDto.getCategory());
         book.setAuthor(author);
-        book.setAvailableCopies(book.getAvailableCopies());
+        book.setAvailableCopies(bookDto.getAvailableCopies());
 
         this.bookRepository.save(book);
         return Optional.of(book);
@@ -109,20 +108,21 @@ public class BookServiceImpl implements BookService {
     public Optional<Book> borrowBook(Long id) {
         Book book = this.bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
-        if(book.getAvailableCopies().equals(0)){
-            throw new BookNotAvailableException(id);
+        if(book.getAvailableCopies() > 0){
+            //throw new BookNotAvailableException(id);
+            book.setAvailableCopies(book.getAvailableCopies()-1);
+            this.bookRepository.save(book);
         }
-        book.setAvailableCopies(book.getAvailableCopies()-1);
-        this.bookRepository.save(book);
         return Optional.of(book);
     }
 
     @Override
-    public void returnBook(Long id) {
+    public Optional<Book> returnBook(Long id) {
         Book book = this.bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
 
         book.setAvailableCopies(book.getAvailableCopies()+1);
         this.bookRepository.save(book);
+        return Optional.of(book);
     }
 }

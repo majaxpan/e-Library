@@ -29,5 +29,5 @@ public interface BookService {
 
     Optional<Book> borrowBook(Long id);
 
-    void returnBook(Long id);
+    Optional<Book> returnBook(Long id);
 }

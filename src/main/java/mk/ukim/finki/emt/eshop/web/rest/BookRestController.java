@@ -48,9 +48,23 @@ public class BookRestController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @PutMapping("borrow/{id}")
+    public ResponseEntity<Book> borrowBook(@PathVariable Long id){
+        return this.bookService.borrowBook(id)
+                .map(book -> ResponseEntity.ok().body(book))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("return/{id}")
+    public ResponseEntity<Book> returnBook(@PathVariable Long id){
+        return this.bookService.returnBook(id)
+                .map(product -> ResponseEntity.ok().body(product))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+
     //DELETE
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity deleteById(@PathVariable Long id) {
+    public ResponseEntity<Book> deleteById(@PathVariable Long id) {
         this.bookService.deleteById(id);
         if (this.bookService.findById(id).isEmpty()) return ResponseEntity.ok().build();
         return ResponseEntity.badRequest().build();
