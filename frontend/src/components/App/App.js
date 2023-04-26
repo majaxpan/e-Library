@@ -1,13 +1,13 @@
 import './App.css';
 import React, {Component} from "react";
-import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import Books from "../Books/BookList/books";
 import BookAdd from "../Books/BookAdd/bookAdd"
 import BookEdit from "../Books/BookEdit/bookEdit";
 import Header from "../Header/header"
 import Categories from "../Categories/categories"
 import Authors from "../Authors/authors"
-import LibraryService from "../../repository/libraryRepository";
+import LibraryRepository from "../../repository/libraryRepository";
 
 class App extends Component {
 
@@ -43,8 +43,13 @@ class App extends Component {
                         <Route path="/books" element={
                             <Books books={this.state.books}
                                    onDelete={this.deleteBook}
-                                   onEdit={this.getBook}/>} />
-                        <Route path="/" element={<Navigate replace to="/books" />} />
+                                   onEdit={this.getBook}
+                                   onBorrow={this.borrowBook}/>} />
+                        <Route path="/" element={
+                            <Books books={this.state.books}
+                                   onDelete={this.deleteBook}
+                                   onEdit={this.getBook}
+                                   onBorrow={this.borrowBook}/>} />
                     </Routes>
                 </main>
             </Router>
@@ -52,7 +57,7 @@ class App extends Component {
     }
 
     loadBooks = () => {
-        LibraryService.fetchBooks()
+        LibraryRepository.fetchBooks()
             .then((data) => {
                 this.setState({
                     books: data.data
@@ -61,7 +66,7 @@ class App extends Component {
     }
 
     loadCategories = () => {
-        LibraryService.fetchCategories()
+        LibraryRepository.fetchCategories()
             .then((data) => {
                 this.setState({
                     categories: data.data
@@ -70,7 +75,7 @@ class App extends Component {
     }
 
     loadAuthors = () => {
-        LibraryService.fetchAuthors()
+        LibraryRepository.fetchAuthors()
             .then((data) => {
                 this.setState({
                     authors: data.data
@@ -79,21 +84,21 @@ class App extends Component {
     }
 
     deleteBook = (id) => {
-        LibraryService.deleteBook(id)
+        LibraryRepository.deleteBook(id)
             .then(() => {
                 this.loadBooks();
             })
     }
 
     addBook = (name, category, author, availableCopies) => {
-        LibraryService.addBook(name, category, author, availableCopies)
+        LibraryRepository.addBook(name, category, author, availableCopies)
             .then(() => {
                 this.loadBooks();
             })
     }
 
     getBook = (id) => {
-        LibraryService.getBook(id)
+        LibraryRepository.getBook(id)
             .then((data) => {
                 this.setState({
                     selectedBook: data.data
@@ -102,9 +107,16 @@ class App extends Component {
     }
 
     editBook = (id, name, category, author, availableCopies) => {
-        LibraryService.editBook(id, name, category, author, availableCopies)
+        LibraryRepository.editBook(id, name, category, author, availableCopies)
             .then(() => {
                 this.loadBooks()
+            })
+    }
+
+    borrowBook = (id) => {
+        LibraryRepository.borrowBook(id)
+            .then(() => {
+                this.loadBooks();
             })
     }
 

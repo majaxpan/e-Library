@@ -1,6 +1,6 @@
 import axios from "../custom-axios/axios";
 
-const LibraryService = {
+const LibraryRepository = {
     fetchBooks : () => {
         return axios.get("/books");
     },
@@ -31,7 +31,10 @@ const LibraryService = {
     },
     getBook: (id) => {
         return axios.get(`/books/${id}`)
+    },
+    borrowBook: (id) => {
+        return axios.put(`/books/borrow/${id}`)
     }
 }
 
-export default LibraryService;
+export default LibraryRepository;
