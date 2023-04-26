@@ -3,8 +3,10 @@ package mk.ukim.finki.emt.eshop.web.rest;
 import mk.ukim.finki.emt.eshop.model.Book;
 import mk.ukim.finki.emt.eshop.model.dto.BookDto;
 import mk.ukim.finki.emt.eshop.service.BookService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,10 +27,15 @@ public class BookRestController {
         return this.bookService.findAll();
     }
 
+    @GetMapping("/pagination")
+    private Page<Book> findAllWithPagination(Pageable pageable) {
+        return this.bookService.findAllWithPagination(pageable);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Book> findById(@PathVariable Long id) {
         return this.bookService.findById(id)
-                .map(product -> ResponseEntity.ok().body(product))
+                .map(book -> ResponseEntity.ok().body(book))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -36,7 +43,7 @@ public class BookRestController {
     @PostMapping("/add")
     public ResponseEntity<Book> save(@RequestBody BookDto bookDto) {
         return this.bookService.save(bookDto)
-                .map(product -> ResponseEntity.ok().body(product))
+                .map(book -> ResponseEntity.ok().body(book))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
@@ -44,7 +51,7 @@ public class BookRestController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<Book> save(@PathVariable Long id, @RequestBody BookDto bookDto) {
         return this.bookService.edit(id, bookDto)
-                .map(product -> ResponseEntity.ok().body(product))
+                .map(book -> ResponseEntity.ok().body(book))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 

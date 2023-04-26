@@ -9,6 +9,8 @@ import mk.ukim.finki.emt.eshop.model.exceptions.BookNotFoundException;
 import mk.ukim.finki.emt.eshop.repository.AuthorRepository;
 import mk.ukim.finki.emt.eshop.repository.BookRepository;
 import mk.ukim.finki.emt.eshop.service.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,11 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> findAll() {
         return this.bookRepository.findAll();
+    }
+
+    @Override
+    public Page<Book> findAllWithPagination(Pageable pageable) {
+        return this.bookRepository.findAll(pageable);
     }
 
     @Override
@@ -80,10 +87,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Optional<Book> edit(Long id, BookDto bookDto) {
-        Author author = this.authorRepository.findById(bookDto.getAuthorId())
-                .orElseThrow(() -> new AuthorNotFoundException(bookDto.getAuthorId()));
         Book book = this.bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException(id));
+
+        Author author = this.authorRepository.findById(bookDto.getAuthorId())
+                .orElseThrow(() -> new AuthorNotFoundException(bookDto.getAuthorId()));
 
         book.setName(bookDto.getName());
         book.setCategory(bookDto.getCategory());
