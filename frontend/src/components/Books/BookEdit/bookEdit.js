@@ -41,6 +41,8 @@ const BookEdit = (props) => {
                                name="name"
                                required
                                defaultValue={props.book.name}
+                               placeholder={props.book.name}
+                               key={props.book.name}
                                onChange={handleChange}
                         />
                     </div>
@@ -73,6 +75,8 @@ const BookEdit = (props) => {
                                id="availableCopies"
                                name="availableCopies"
                                defaultValue={props.book.availableCopies}
+                               placeholder={props.book.availableCopies}
+                               key={props.book.availableCopies}
                                required
                                onChange={handleChange}
                         />

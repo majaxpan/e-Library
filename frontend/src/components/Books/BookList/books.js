@@ -52,7 +52,7 @@ class Books extends React.Component {
                                nextLabel={"next"}
                                breakLabel={<a href="/#">...</a>}
                                breakClassName={"break-me"}
-                               pageClassName={"ml-1"}
+                               pageClassName={"mx-1"}
                                pageCount={pageCount}
                                marginPagesDisplayed={2}
                                pageRangeDisplayed={5}
